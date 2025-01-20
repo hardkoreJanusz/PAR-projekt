@@ -59,6 +59,7 @@ def broadcast_message(message, sender_socket):
 def handle_client(client_socket, address):
     print(f"[INFO] Połączono z {address}")
     clients.append((client_socket, address))
+    
     try:
         while True:
             data = client_socket.recv(1024).decode()
@@ -78,6 +79,7 @@ def main():
     server.bind(("127.0.0.1", 12345))
     server.listen(5)
     print("[INFO] Serwer uruchomiony na porcie 12345")
+    
     try:
         while True:
             client_socket, address = server.accept()
@@ -114,12 +116,14 @@ def main():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect(("127.0.0.1", 12345))
     print("[INFO] Połączono z serwerem")
+    
     threading.Thread(target=receive_messages, args=(client,), daemon=True).start()
+    
     try:
         while True:
-            message = input("You: ")
+            message = input("Ty: ")
             client.send(message.encode())
-            if message.lower() == "bye":
+            if message.lower() == "exit":
                 break
     except Exception as e:
         print(f"[ERROR] {e}")
